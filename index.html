@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LinguaBot — Learn Languages Smarter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ─── CSS VARIABLES ───────────────────────────────────── */
+    :root {
+      --yellow:       #FFCB3D;
+      --yellow-dark:  #E6B000;
+      --yellow-light: #FFF3C2;
+      --yellow-glow:  rgba(255, 203, 61, 0.35);
+
+      --bg:           #FFFFFF;
+      --bg2:          #F9F6EE;
+      --bg3:          #FFF8E6;
+      --card:         #FFFFFF;
+      --card-border:  rgba(0,0,0,0.07);
+      --text:         #1A1A2E;
+      --text2:        #555566;
+      --text3:        #888899;
+      --nav-bg:       rgba(255,255,255,0.92);
+      --shadow:       0 4px 30px rgba(0,0,0,0.08);
+      --shadow-lg:    0 12px 48px rgba(0,0,0,0.12);
+      --footer-bg:    #1A1A2E;
+      --footer-text:  #CCCCDD;
+      --toggle-bg:    #E0E0EE;
+
+      --radius:       18px;
+      --radius-sm:    10px;
+      --transition:   0.3s cubic-bezier(.4,0,.2,1);
+    }
+
+    [data-theme="dark"] {
+      --bg:          #13131F;
+      --bg2:         #1C1C2E;
+      --bg3:         #1F1E10;
+      --card:        #1E1E30;
+      --card-border: rgba(255,255,255,0.07);
+      --text:        #F0F0FF;
+      --text2:       #AAAACC;
+      --text3:       #666688;
+      --nav-bg:      rgba(19,19,31,0.92);
+      --shadow:      0 4px 30px rgba(0,0,0,0.35);
+      --shadow-lg:   0 12px 48px rgba(0,0,0,0.5);
+      --footer-bg:   #0D0D18;
+      --footer-text: #8888AA;
+      --toggle-bg:   #2A2A44;
+    }
+
+    /* ─── RESET ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background var(--transition), color var(--transition);
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; }
+
+    /* ─── SCROLLBAR ───────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg2); }
+    ::-webkit-scrollbar-thumb { background: var(--yellow); border-radius: 99px; }
+
+    /* ─── UTILITY ─────────────────────────────────────────── */
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .tag {
+      display: inline-block;
+      background: var(--yellow-light);
+      color: var(--yellow-dark);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 99px;
+      margin-bottom: 14px;
+    }
+    [data-theme="dark"] .tag { background: rgba(255,203,61,.15); color: var(--yellow); }
+    .section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.15;
+      color: var(--text);
+    }
+    .section-sub {
+      color: var(--text2);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      max-width: 560px;
+      margin-top: 12px;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px;
+      border-radius: 99px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: .95rem;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--yellow);
+      color: #1A1A2E;
+      box-shadow: 0 4px 18px var(--yellow-glow);
+    }
+    .btn-primary:hover {
+      background: var(--yellow-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px var(--yellow-glow);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--card-border);
+    }
+    .btn-outline:hover {
+      border-color: var(--yellow);
+      color: var(--yellow-dark);
+      background: var(--yellow-light);
+    }
+    [data-theme="dark"] .btn-outline:hover { background: rgba(255,203,61,.1); }
+
+    /* ─── NAVBAR ──────────────────────────────────────────── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+      background: var(--nav-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--card-border);
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .nav-inner {
+      display: flex; align-items: center; gap: 12px;
+      height: 68px;
+    }
+    .nav-logo {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem;
+      color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .nav-logo span { color: var(--yellow); }
+    .nav-logo .logo-icon {
+      width: 34px; height: 34px;
+      background: var(--yellow);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 4px;
+      margin-left: auto;
+    }
+    .nav-links a {
+      font-weight: 600; font-size: .9rem;
+      padding: 7px 14px;
+      border-radius: 8px;
+      color: var(--text2);
+      transition: color var(--transition), background var(--transition);
+    }
+    .nav-links a:hover { color: var(--text); background: var(--bg2); }
+    .nav-actions { display: flex; align-items: center; gap: 10px; margin-left: 16px; }
+
+    /* Dark mode toggle */
+    .theme-toggle {
+      background: var(--toggle-bg);
+      border: none; cursor: pointer;
+      width: 52px; height: 28px;
+      border-radius: 99px;
+      position: relative;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+    .theme-toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--yellow);
+      transition: transform var(--transition);
+      box-shadow: 0 2px 6px rgba(0,0,0,.2);
+    }
+    [data-theme="dark"] .theme-toggle::after { transform: translateX(24px); }
+    .theme-icon {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-size: 12px; pointer-events: none;
+      transition: opacity var(--transition);
+    }
+    .theme-icon.sun { left: 5px; opacity: 1; }
+    .theme-icon.moon { right: 5px; opacity: 0; }
+    [data-theme="dark"] .theme-icon.sun { opacity: 0; }
+    [data-theme="dark"] .theme-icon.moon { opacity: 1; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 6px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all .3s ease;
+    }
+
+    /* Mobile nav */
+    .mobile-nav {
+      display: none;
+      position: fixed; top: 68px; left: 0; right: 0; z-index: 899;
+      background: var(--nav-bg);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 16px 24px 20px;
+      flex-direction: column; gap: 6px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-weight: 600; font-size: 1rem;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: var(--text2);
+      transition: all var(--transition);
+    }
+    .mobile-nav a:hover { background: var(--bg2); color: var(--text); }
+
+    /* ─── HERO ────────────────────────────────────────────── */
+    #hero {
+      padding-top: 100px;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+      display: flex; align-items: center;
+    }
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: .55;
+      pointer-events: none;
+    }
+    .hero-blob-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, var(--yellow) 0%, transparent 70%);
+      top: -200px; right: -100px;
+      opacity: .25;
+    }
+    .hero-blob-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #A8E6CF 0%, transparent 70%);
+      bottom: -100px; left: -80px;
+      opacity: .2;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px; align-items: center;
+      position: relative; z-index: 1;
+      padding: 48px 0 80px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--yellow-light);
+      color: var(--yellow-dark);
+      font-weight: 700; font-size: .82rem;
+      padding: 6px 14px; border-radius: 99px;
+      margin-bottom: 20px;
+      animation: fadeDown .6s ease both;
+    }
+    [data-theme="dark"] .hero-badge { background: rgba(255,203,61,.15); color: var(--yellow); }
+    .hero-badge .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #22C55E;
+      animation: pulse 1.5s ease infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(1.4); }
+    }
+    .hero-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.8rem, 5.5vw, 4.2rem);
+      line-height: 1.1;
+      color: var(--text);
+      animation: fadeUp .7s .1s ease both;
+    }
+    .hero-title .accent {
+      color: var(--yellow-dark);
+      position: relative;
+      display: inline-block;
+    }
+    .hero-title .accent::after {
+      content: '';
+      position: absolute;
+      bottom: 4px; left: 0; right: 0;
+      height: 6px;
+      background: var(--yellow);
+      border-radius: 3px;
+      z-index: -1;
+      transform-origin: left;
+      animation: underlineGrow .8s .7s cubic-bezier(.4,0,.2,1) both;
+    }
+    @keyframes underlineGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    .hero-desc {
+      color: var(--text2);
+      font-size: 1.1rem;
+      line-height: 1.75;
+      margin: 20px 0 32px;
+      max-width: 480px;
+      animation: fadeUp .7s .2s ease both;
+    }
+    .hero-ctas {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      animation: fadeUp .7s .3s ease both;
+    }
+    .hero-ctas .btn svg { width: 18px; height: 18px; }
+    .hero-stats {
+      display: flex; gap: 28px;
+      margin-top: 40px;
+      animation: fadeUp .7s .4s ease both;
+    }
+    .stat-item { display: flex; flex-direction: column; gap: 2px; }
+    .stat-num {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem;
+      color: var(--text);
+    }
+    .stat-num span { color: var(--yellow-dark); }
+    .stat-label { font-size: .8rem; color: var(--text3); font-weight: 600; letter-spacing: .04em; }
+
+    /* Phone mockup */
+    .hero-visual {
+      display: flex; justify-content: center; align-items: center;
+      position: relative;
+      animation: fadeLeft .8s .2s ease both;
+    }
+    .phone-wrap {
+      position: relative;
+      width: 280px;
+      filter: drop-shadow(0 32px 64px rgba(0,0,0,.18));
+    }
+    .phone-outer {
+      background: linear-gradient(145deg, #2A2A2A, #1A1A1A);
+      border-radius: 44px;
+      padding: 14px;
+      position: relative;
+    }
+    [data-theme="dark"] .phone-outer { background: linear-gradient(145deg, #333, #222); }
+    .phone-screen {
+      background: var(--bg2);
+      border-radius: 32px;
+      overflow: hidden;
+      height: 500px;
+      position: relative;
+    }
+    .phone-notch {
+      width: 80px; height: 26px;
+      background: #1A1A1A;
+      border-radius: 0 0 16px 16px;
+      margin: 0 auto;
+      position: relative; z-index: 2;
+    }
+    .phone-content { padding: 12px 16px; }
+    .phone-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .phone-logo {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    .phone-logo span { color: var(--yellow-dark); }
+    .xp-pill {
+      background: var(--yellow);
+      color: #1A1A2E;
+      font-size: .65rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 99px;
+    }
+    .phone-lesson-card {
+      background: linear-gradient(135deg, var(--yellow) 0%, #FFE082 100%);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+      color: #1A1A2E;
+    }
+    .plc-label { font-size: .62rem; font-weight: 800; letter-spacing: .08em; opacity: .7; text-transform: uppercase; }
+    .plc-title { font-family: 'Fredoka One', cursive; font-size: 1.1rem; margin: 4px 0; }
+    .plc-meta { font-size: .7rem; opacity: .7; }
+    .progress-bar-wrap { margin-top: 10px; }
+    .pb-label { display: flex; justify-content: space-between; font-size: .63rem; font-weight: 700; margin-bottom: 4px; }
+    .pb-track {
+      background: rgba(0,0,0,.15);
+      border-radius: 99px; height: 5px;
+    }
+    .pb-fill {
+      background: #1A1A2E;
+      border-radius: 99px; height: 100%;
+      width: 72%;
+    }
+    .phone-words { display: flex; flex-direction: column; gap: 8px; }
+    .word-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--card-border);
+    }
+    .word-pair { display: flex; gap: 6px; align-items: center; font-size: .78rem; }
+    .word-native { font-weight: 700; color: var(--text); }
+    .word-sep { color: var(--text3); font-size: .65rem; }
+    .word-trans { color: var(--text2); }
+    .word-star { font-size: .85rem; }
+    .streak-bar {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-top: 10px;
+    }
+    .streak-icon { font-size: 1.1rem; }
+    .streak-text { font-size: .72rem; font-weight: 700; color: var(--text); }
+    .streak-sub { font-size: .63rem; color: var(--text3); }
+
+    /* floating badges */
+    .float-badge {
+      position: absolute;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow-lg);
+      display: flex; align-items: center; gap: 9px;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      animation: float 4s ease-in-out infinite;
+    }
+    .float-badge-1 { top: 40px; right: -30px; animation-delay: 0s; }
+    .float-badge-2 { bottom: 80px; left: -40px; animation-delay: 1.5s; }
+    .float-badge .fb-icon { font-size: 1.2rem; }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: none; } }
+    @keyframes fadeDown { from { opacity:0; transform: translateY(-16px); } to { opacity:1; transform: none; } }
+    @keyframes fadeLeft { from { opacity:0; transform: translateX(40px); } to { opacity:1; transform: none; } }
+
+    /* ─── FEATURES ────────────────────────────────────────── */
+    #features {
+      padding: 100px 0;
+      background: var(--bg2);
+    }
+    .features-header { text-align: center; margin-bottom: 60px; }
+    .features-header .section-sub { margin: 12px auto 0; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feat-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .feat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--yellow);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition);
+      border-radius: 3px 3px 0 0;
+    }
+    .feat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--yellow); }
+    .feat-card:hover::before { transform: scaleX(1); }
+    .feat-icon {
+      width: 52px; height: 52px;
+      background: var(--yellow-light);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      transition: background var(--transition);
+    }
+    [data-theme="dark"] .feat-icon { background: rgba(255,203,61,.12); }
+    .feat-card:hover .feat-icon { background: var(--yellow); }
+    .feat-card h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .feat-card p { color: var(--text2); font-size: .92rem; line-height: 1.65; }
+
+    /* ─── HOW IT WORKS ────────────────────────────────────── */
+    #how {
+      padding: 100px 0;
+      background: var(--bg);
+    }
+    .how-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+    }
+    .steps { display: flex; flex-direction: column; gap: 28px; margin-top: 36px; }
+    .step {
+      display: flex; gap: 18px; align-items: flex-start;
+    }
+    .step-num {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: var(--yellow);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      color: #1A1A2E;
+    }
+    .step-body h4 {
+      font-weight: 800; font-size: 1rem;
+      color: var(--text); margin-bottom: 4px;
+    }
+    .step-body p { color: var(--text2); font-size: .9rem; line-height: 1.6; }
+    .how-visual {
+      background: var(--bg3);
+      border-radius: 32px;
+      padding: 40px;
+      display: flex; flex-direction: column; gap: 16px;
+      border: 1px solid var(--card-border);
+    }
+    [data-theme="dark"] .how-visual { background: rgba(255,203,61,.04); }
+    .quiz-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 22px;
+    }
+    .quiz-q { font-weight: 700; font-size: .95rem; color: var(--text); margin-bottom: 14px; }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .quiz-opt {
+      background: var(--bg2);
+      border: 2px solid var(--card-border);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: .82rem; font-weight: 600;
+      color: var(--text2);
+      cursor: default;
+      transition: all .2s;
+    }
+    .quiz-opt.correct { background: #DCFCE7; border-color: #22C55E; color: #15803D; }
+    .quiz-opt.wrong { background: #FEE2E2; border-color: #EF4444; color: #DC2626; }
+    [data-theme="dark"] .quiz-opt.correct { background: rgba(34,197,94,.15); color: #4ADE80; border-color: #22C55E; }
+    [data-theme="dark"] .quiz-opt.wrong { background: rgba(239,68,68,.12); color: #F87171; border-color: #EF4444; }
+    .xp-toast {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--yellow);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 800; font-size: .85rem;
+      color: #1A1A2E;
+    }
+
+    /* ─── LANGUAGES ───────────────────────────────────────── */
+    #languages {
+      padding: 80px 0;
+      background: var(--bg2);
+      overflow: hidden;
+    }
+    .lang-header { text-align: center; margin-bottom: 48px; }
+    .lang-header .section-sub { margin: 12px auto 0; }
+    .lang-scroll-track { position: relative; }
+    .lang-row {
+      display: flex; gap: 14px;
+      animation: scrollLeft 25s linear infinite;
+      width: max-content;
+    }
+    .lang-row.reverse { animation-direction: reverse; margin-top: 12px; }
+    @keyframes scrollLeft {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .lang-chip {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 99px;
+      padding: 10px 20px;
+      font-weight: 700; font-size: .88rem;
+      color: var(--text);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .lang-chip .flag { font-size: 1.2rem; }
+
+    /* ─── ABOUT ───────────────────────────────────────────── */
+    #about {
+      padding: 100px 0;
+      background: var(--bg);
+    }
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px; align-items: center;
+    }
+    .about-img-wrap {
+      position: relative;
+    }
+    .about-card-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .about-mini-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 22px 18px;
+      text-align: center;
+    }
+    .about-mini-card .amc-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .about-mini-card .amc-num {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.7rem;
+      color: var(--text);
+    }
+    .about-mini-card .amc-num span { color: var(--yellow-dark); }
+    .about-mini-card .amc-label { font-size: .75rem; color: var(--text3); font-weight: 600; margin-top: 2px; }
+    .about-mini-card:first-child { background: var(--yellow); }
+    [data-theme="dark"] .about-mini-card:first-child { background: rgba(255,203,61,.12); border-color: rgba(255,203,61,.25); }
+    .about-mini-card:first-child .amc-num,
+    .about-mini-card:first-child .amc-label { color: #1A1A2E; }
+    [data-theme="dark"] .about-mini-card:first-child .amc-num { color: var(--yellow); }
+    [data-theme="dark"] .about-mini-card:first-child .amc-label { color: var(--text3); }
+    .about-content .section-sub { max-width: 100%; }
+    .about-content p { color: var(--text2); line-height: 1.75; font-size: .97rem; margin-bottom: 16px; }
+    .about-values { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .value-pill {
+      background: var(--bg2);
+      border: 1px solid var(--card-border);
+      border-radius: 99px;
+      padding: 7px 16px;
+      font-size: .83rem; font-weight: 700;
+      color: var(--text2);
+    }
+
+    /* ─── TEAM ────────────────────────────────────────────── */
+    #team {
+      padding: 80px 0;
+      background: var(--bg2);
+    }
+    .team-header { text-align: center; margin-bottom: 52px; }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .team-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .team-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+    .team-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      font-size: 2rem;
+      display: flex; align-items: center; justify-content: center;
+      border: 3px solid var(--yellow);
+    }
+    .team-card h4 { font-weight: 800; font-size: .95rem; color: var(--text); }
+    .team-card .role { font-size: .78rem; color: var(--text3); margin-top: 3px; font-weight: 600; }
+
+    /* ─── DOWNLOAD ────────────────────────────────────────── */
+    #download {
+      padding: 100px 0;
+      background: var(--bg);
+    }
+    .download-inner {
+      background: linear-gradient(135deg, #1A1A2E 0%, #2D2D4E 100%);
+      border-radius: 32px;
+      padding: 72px 64px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 48px; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .download-blob {
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, var(--yellow) 0%, transparent 65%);
+      top: -150px; right: -80px;
+      opacity: .12;
+      pointer-events: none;
+    }
+    .download-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      color: #FFFFFF;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .download-title span { color: var(--yellow); }
+    .download-desc { color: rgba(255,255,255,.65); font-size: 1rem; line-height: 1.7; max-width: 480px; }
+    .download-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .dl-btn {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--yellow);
+      color: #1A1A2E;
+      font-weight: 800; font-size: .92rem;
+      padding: 13px 24px;
+      border-radius: 99px;
+      border: none; cursor: pointer;
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+    .dl-btn:hover { background: var(--yellow-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,203,61,.4); }
+    .dl-btn-ghost {
+      background: rgba(255,255,255,.1);
+      color: #FFFFFF;
+      border: 1px solid rgba(255,255,255,.2);
+    }
+    .dl-btn-ghost:hover { background: rgba(255,255,255,.18); transform: translateY(-2px); box-shadow: none; }
+    .dl-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .download-qr {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 20px;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      position: relative; z-index: 1;
+    }
+    .qr-grid {
+      display: grid; grid-template-columns: repeat(9, 8px);
+      grid-template-rows: repeat(9, 8px);
+      gap: 2px;
+    }
+    .qr-cell { border-radius: 2px; }
+    .qr-cell.on { background: #1A1A2E; }
+    .qr-cell.off { background: transparent; }
+    .qr-label { font-size: .73rem; font-weight: 700; color: #888; }
+
+    /* ─── TESTIMONIALS ────────────────────────────────────── */
+    #testimonials {
+      padding: 90px 0;
+      background: var(--bg2);
+    }
+    .testi-header { text-align: center; margin-bottom: 52px; }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+    .testi-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .testi-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .stars { color: var(--yellow); font-size: .95rem; margin-bottom: 14px; letter-spacing: 2px; }
+    .testi-card p { color: var(--text2); font-size: .92rem; line-height: 1.7; }
+    .testi-author {
+      display: flex; align-items: center; gap: 12px;
+      margin-top: 18px; padding-top: 16px;
+      border-top: 1px solid var(--card-border);
+    }
+    .testi-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--yellow-light);
+      flex-shrink: 0;
+    }
+    [data-theme="dark"] .testi-avatar { background: rgba(255,203,61,.12); }
+    .testi-author-name { font-weight: 800; font-size: .88rem; color: var(--text); }
+    .testi-author-meta { font-size: .75rem; color: var(--text3); margin-top: 1px; }
+
+    /* ─── CONTACT ─────────────────────────────────────────── */
+    #contact {
+      padding: 100px 0;
+      background: var(--bg);
+    }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: start;
+    }
+    .contact-info h2 { margin-bottom: 16px; }
+    .contact-info .section-sub { margin-top: 0; }
+    .contact-methods { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; }
+    .contact-method {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 18px;
+      background: var(--bg2);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+    }
+    .cm-icon {
+      width: 40px; height: 40px;
+      background: var(--yellow);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .cm-label { font-size: .73rem; color: var(--text3); font-weight: 600; }
+    .cm-value { font-size: .9rem; color: var(--text); font-weight: 700; margin-top: 1px; }
+    .contact-form {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 36px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .form-group label { font-size: .82rem; font-weight: 700; color: var(--text2); }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: var(--bg2);
+      border: 1.5px solid var(--card-border);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .9rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color var(--transition);
+      resize: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--yellow); }
+    .form-group textarea { height: 100px; }
+    .form-submit { width: 100%; justify-content: center; font-size: 1rem; padding: 14px; }
+    #form-success {
+      display: none;
+      text-align: center;
+      padding: 24px;
+      background: #DCFCE7;
+      border-radius: 12px;
+      color: #15803D;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+    [data-theme="dark"] #form-success { background: rgba(34,197,94,.12); color: #4ADE80; }
+
+    /* ─── FOOTER ──────────────────────────────────────────── */
+    footer {
+      background: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 64px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .footer-brand .nav-logo { color: #FFFFFF; margin-bottom: 14px; }
+    .footer-brand .nav-logo span { color: var(--yellow); }
+    .footer-brand p { font-size: .88rem; line-height: 1.7; max-width: 260px; }
+    .footer-social { display: flex; gap: 10px; margin-top: 20px; }
+    .social-btn {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .95rem;
+      transition: background var(--transition), transform var(--transition);
+      cursor: pointer;
+      border: none;
+      color: #fff;
+      text-decoration: none;
+    }
+    .social-btn:hover { background: var(--yellow); transform: translateY(-2px); }
+    .footer-col h5 {
+      font-size: .82rem; font-weight: 800;
+      letter-spacing: .06em; text-transform: uppercase;
+      color: rgba(255,255,255,.5);
+      margin-bottom: 18px;
+    }
+    .footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a {
+      font-size: .88rem;
+      color: var(--footer-text);
+      transition: color var(--transition);
+    }
+    .footer-col ul a:hover { color: var(--yellow); }
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 28px;
+      font-size: .82rem; color: rgba(255,255,255,.3);
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom a { color: rgba(255,255,255,.3); transition: color var(--transition); }
+    .footer-bottom a:hover { color: var(--yellow); }
+
+    /* ─── BACK TO TOP ─────────────────────────────────────── */
+    #back-top {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 48px; height: 48px;
+      background: var(--yellow);
+      color: #1A1A2E;
+      border: none; border-radius: 14px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 16px var(--yellow-glow);
+      opacity: 0; pointer-events: none;
+      transform: translateY(12px);
+      transition: all var(--transition);
+      z-index: 800;
+    }
+    #back-top.visible { opacity: 1; pointer-events: auto; transform: none; }
+    #back-top:hover { background: var(--yellow-dark); transform: translateY(-2px); }
+
+    /* ─── DIVIDER ─────────────────────────────────────────── */
+    .wave-divider { line-height: 0; }
+    .wave-divider svg { display: block; }
+
+    /* ─── RESPONSIVE ──────────────────────────────────────── */
+    @media(max-width: 1024px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+    @media(max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-actions .btn { display: none; }
+      .hamburger { display: flex; }
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero-visual { order: -1; }
+      .hero-stats { justify-content: center; }
+      .hero-ctas { justify-content: center; }
+      .hero-desc { margin-left: auto; margin-right: auto; }
+      .phone-wrap { width: 220px; }
+      .phone-screen { height: 390px; }
+      .float-badge-1, .float-badge-2 { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .how-inner { grid-template-columns: 1fr; }
+      .about-inner { grid-template-columns: 1fr; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .contact-inner { grid-template-columns: 1fr; }
+      .download-inner { grid-template-columns: 1fr; padding: 40px 28px; }
+      .download-qr { display: none; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ NAVBAR ═══════════════════ -->
+<nav id="navbar">
+  <div class="container nav-inner">
+    <a href="#hero" class="nav-logo">
+      <div class="logo-icon">🌍</div>
+      Lingua<span>Bot</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#languages">Languages</a></li>
+      <li><a href="#about">About Us</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span class="theme-icon sun">☀️</span>
+        <span class="theme-icon moon">🌙</span>
+      </button>
+      <a href="https://github.com/linguabot-app/releases/latest/download/LinguaBot.apk" class="btn btn-primary" style="padding:9px 20px;font-size:.85rem;">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+        Download APK
+      </a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#features" onclick="closeMob()">Features</a>
+  <a href="#how" onclick="closeMob()">How It Works</a>
+  <a href="#languages" onclick="closeMob()">Languages</a>
+  <a href="#about" onclick="closeMob()">About Us</a>
+  <a href="#team" onclick="closeMob()">Team</a>
+  <a href="#contact" onclick="closeMob()">Contact</a>
+  <a href="https://github.com/linguabot-app/releases/latest/download/LinguaBot.apk" class="btn btn-primary" style="margin-top:6px;justify-content:center;">Download APK</a>
+</div>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section id="hero">
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Now with AI-Powered Conversations
+        </div>
+        <h1 class="hero-title">
+          Speak any language<br><span class="accent">fluently</span> with AI
+        </h1>
+        <p class="hero-desc">
+          LinguaBot uses adaptive learning and real-time AI conversations to help you achieve fluency 3× faster than traditional methods. No boring drills — just smart, fun practice.
+        </p>
+        <div class="hero-ctas">
+          <a href="https://github.com/linguabot-app/releases/latest/download/LinguaBot.apk" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="18" height="18"><path d="M12 16l-4-4h3V4h2v8h3l-4 4z"/><path d="M20 18H4"/></svg>
+            Download Free APK
+          </a>
+          <a href="https://github.com/linguabot-app" class="btn btn-outline" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num">2M<span>+</span></div>
+            <div class="stat-label">Active Learners</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">50<span>+</span></div>
+            <div class="stat-label">Languages</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">4.9<span>★</span></div>
+            <div class="stat-label">User Rating</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone Mockup -->
+      <div class="hero-visual">
+        <div class="phone-wrap">
+          <div class="phone-outer">
+            <div class="phone-screen">
+              <div class="phone-notch"></div>
+              <div class="phone-content">
+                <div class="phone-header">
+                  <div class="phone-logo">Lingua<span>Bot</span></div>
+                  <div class="xp-pill">🔥 7-day streak</div>
+                </div>
+                <div class="phone-lesson-card">
+                  <div class="plc-label">Today's Lesson</div>
+                  <div class="plc-title">Spanish — Travel</div>
+                  <div class="plc-meta">Lesson 12 of 20 · Intermediate</div>
+                  <div class="progress-bar-wrap">
+                    <div class="pb-label"><span>Progress</span><span>72%</span></div>
+                    <div class="pb-track"><div class="pb-fill"></div></div>
+                  </div>
+                </div>
+                <div class="phone-words">
+                  <div class="word-row">
+                    <div class="word-pair">
+                      <span class="word-native">¿Dónde está?</span>
+                      <span class="word-sep">→</span>
+                      <span class="word-trans">Where is?</span>
+                    </div>
+                    <span class="word-star">⭐</span>
+                  </div>
+                  <div class="word-row">
+                    <div class="word-pair">
+                      <span class="word-native">El aeropuerto</span>
+                      <span class="word-sep">→</span>
+                      <span class="word-trans">Airport</span>
+                    </div>
+                    <span class="word-star">⭐</span>
+                  </div>
+                  <div class="word-row">
+                    <div class="word-pair">
+                      <span class="word-native">La habitación</span>
+                      <span class="word-sep">→</span>
+                      <span class="word-trans">Room</span>
+                    </div>
+                    <span class="word-star">✨</span>
+                  </div>
+                </div>
+                <div class="streak-bar">
+                  <span class="streak-icon">⚡</span>
+                  <div>
+                    <div class="streak-text">Daily Goal: 80%</div>
+                    <div class="streak-sub">20 XP to complete today</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- floating badges -->
+          <div class="float-badge float-badge-1">
+            <span class="fb-icon">🏆</span>
+            <div>
+              <div style="font-size:.75rem;font-weight:800;color:var(--text)">+50 XP Earned!</div>
+              <div style="font-size:.65rem;color:var(--text3)">Vocabulary Master</div>
+            </div>
+          </div>
+          <div class="float-badge float-badge-2">
+            <span class="fb-icon">🎯</span>
+            <div>
+              <div style="font-size:.75rem;font-weight:800;color:var(--text)">Streak: 7 Days</div>
+              <div style="font-size:.65rem;color:var(--text3)">Keep it up!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FEATURES ═══════════════════ -->
+<section id="features">
+  <div class="container">
+    <div class="features-header">
+      <span class="tag">✨ Features</span>
+      <h2 class="section-title">Everything you need to become fluent</h2>
+      <p class="section-sub">From AI-powered conversations to spaced repetition, LinguaBot gives you every tool to master a new language.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🤖</div>
+        <h3>AI Conversation Partner</h3>
+        <p>Practice real conversations with an AI tutor that adapts to your level, corrects mistakes in real-time, and speaks back to you naturally.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🧠</div>
+        <h3>Adaptive Learning Engine</h3>
+        <p>Our spaced-repetition algorithm tracks every word you know and schedules reviews at the perfect moment for maximum retention.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🎮</div>
+        <h3>Gamified Progress</h3>
+        <p>Earn XP, maintain daily streaks, unlock achievements, and compete with friends on global leaderboards to keep you motivated.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🎙️</div>
+        <h3>Pronunciation Coach</h3>
+        <p>Advanced speech recognition scores your pronunciation and provides instant phonetic feedback with native speaker comparisons.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📚</div>
+        <h3>Curated Story Lessons</h3>
+        <p>Learn vocabulary and grammar in context through engaging stories written by native speakers across 50+ languages.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📵</div>
+        <h3>Fully Offline Mode</h3>
+        <p>Download entire language packs and learn anywhere without internet. All core features work offline, always.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ HOW IT WORKS ═══════════════════ -->
+<section id="how">
+  <div class="container">
+    <div class="how-inner">
+      <div>
+        <span class="tag">⚙️ Process</span>
+        <h2 class="section-title">Start speaking in days, not years</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Pick Your Language & Goal</h4>
+              <p>Choose from 50+ languages and set your goal — travel, business, or full fluency. Our AI builds your personalised curriculum.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Complete Daily Micro-Lessons</h4>
+              <p>Spend just 10–15 minutes a day on bite-sized lessons. Our adaptive engine focuses on what you need most.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Practice with the AI Tutor</h4>
+              <p>Have real conversations on any topic. The AI corrects your mistakes gently and teaches you naturally.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>Track Your Fluency Progress</h4>
+              <p>Watch your fluency score rise weekly. Get detailed reports on vocabulary, grammar, listening, and speaking.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="how-visual">
+        <div class="quiz-card">
+          <div class="quiz-q">🎯 What does "Gracias" mean?</div>
+          <div class="quiz-options">
+            <div class="quiz-opt">Please</div>
+            <div class="quiz-opt correct">✓ Thank you</div>
+            <div class="quiz-opt wrong">✗ Goodbye</div>
+            <div class="quiz-opt">Hello</div>
+          </div>
+        </div>
+        <div class="xp-toast">
+          <span style="font-size:1.3rem">🎉</span>
+          <div>
+            <div>Correct! +10 XP earned</div>
+            <div style="font-weight:500;font-size:.78rem;opacity:.7;margin-top:2px">Streak continues — Day 8!</div>
+          </div>
+        </div>
+        <div class="quiz-card" style="background:var(--bg3);border-color:var(--yellow);">
+          <div style="font-size:.75rem;font-weight:700;color:var(--text3);margin-bottom:8px;">🎙️ PRONUNCIATION CHECK</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <div style="font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--text);">Buenos días</div>
+            <div style="font-size:.7rem;color:var(--text3);">bweh-nos dee-ahs</div>
+          </div>
+          <div style="height:32px;display:flex;align-items:center;gap:2px;">
+            <!-- Fake waveform bars -->
+            <script>document.write(Array.from({length:32},(_,i)=>`<div style="width:4px;height:${8+Math.abs(Math.sin(i*.6)*18)}px;background:var(--yellow);border-radius:2px;opacity:${.5+Math.sin(i*.4)*.5}"></div>`).join(''))</script>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;">
+            <div style="font-size:.78rem;font-weight:700;color:#22C55E;">Score: 94% ✓</div>
+            <div style="font-size:.72rem;color:var(--text3);">Native: 97%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ LANGUAGES ═══════════════════ -->
+<section id="languages">
+  <div class="container">
+    <div class="lang-header">
+      <span class="tag">🌍 Languages</span>
+      <h2 class="section-title">50+ languages and counting</h2>
+      <p class="section-sub">From the most spoken world languages to rare indigenous tongues — we've got you covered.</p>
+    </div>
+  </div>
+  <div class="lang-scroll-track">
+    <div class="lang-row" id="langRow1"></div>
+    <div class="lang-row reverse" id="langRow2"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════ ABOUT ═══════════════════ -->
+<section id="about">
+  <div class="container">
+    <div class="about-inner">
+      <div class="about-img-wrap">
+        <div class="about-card-grid">
+          <div class="about-mini-card">
+            <div class="amc-icon">🏆</div>
+            <div class="amc-num">2M<span>+</span></div>
+            <div class="amc-label">Active Users</div>
+          </div>
+          <div class="about-mini-card">
+            <div class="amc-icon">🌍</div>
+            <div class="amc-num">50<span>+</span></div>
+            <div class="amc-label">Languages</div>
+          </div>
+          <div class="about-mini-card">
+            <div class="amc-icon">📱</div>
+            <div class="amc-num">4.9<span>★</span></div>
+            <div class="amc-label">App Rating</div>
+          </div>
+          <div class="about-mini-card">
+            <div class="amc-icon">⚡</div>
+            <div class="amc-num">3<span>×</span></div>
+            <div class="amc-label">Faster Learning</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-content">
+        <span class="tag">🏢 About Us</span>
+        <h2 class="section-title">Building the future of language learning</h2>
+        <p>LinguaBot was founded in 2022 by a team of linguists, AI researchers, and passionate polyglots. We were frustrated with language apps that relied on repetitive drills and gamification tricks without actual conversational practice.</p>
+        <p>Our mission is simple: make fluency achievable for everyone. We believe technology — specifically AI — can be the patient, always-available language tutor that most people never had access to.</p>
+        <p>Today, we're a fully open-source project hosted on GitHub, driven by a global community of contributors who share our belief that language learning should be <strong>free, effective, and actually fun.</strong></p>
+        <div class="about-values">
+          <span class="value-pill">🌱 Open Source</span>
+          <span class="value-pill">🤝 Community Driven</span>
+          <span class="value-pill">🆓 Free Forever Tier</span>
+          <span class="value-pill">🔒 Privacy First</span>
+          <span class="value-pill">♿ Accessible</span>
+          <span class="value-pill">🌍 Inclusive</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ TEAM ═══════════════════ -->
+<section id="team">
+  <div class="container">
+    <div class="team-header">
+      <span class="tag">👥 Our Team</span>
+      <h2 class="section-title">The people behind LinguaBot</h2>
+      <p class="section-sub" style="margin:12px auto 0;">A small but mighty team of language nerds, engineers, and educators.</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">👩‍💻</div>
+        <h4>Sofia Delacroix</h4>
+        <div class="role">CEO & Co-Founder</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👨‍🔬</div>
+        <h4>Arjun Mehta</h4>
+        <div class="role">CTO & AI Lead</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👩‍🎨</div>
+        <h4>Yuki Tanaka</h4>
+        <div class="role">Head of Design</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👨‍🏫</div>
+        <h4>Carlos Ruiz</h4>
+        <div class="role">Head of Curriculum</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ TESTIMONIALS ═══════════════════ -->
+<section id="testimonials">
+  <div class="container">
+    <div class="testi-header">
+      <span class="tag">💬 Testimonials</span>
+      <h2 class="section-title">Loved by millions of learners</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p>"I've tried every language app out there. LinguaBot is the only one where I actually hold real conversations now. The AI tutor is genuinely helpful and doesn't let you get away with bad pronunciation!"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">🇩🇪</div>
+          <div>
+            <div class="testi-author-name">Emma Hoffmann</div>
+            <div class="testi-author-meta">Learning Spanish · Berlin, Germany</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p>"After 3 months with LinguaBot I passed my JLPT N4 exam. The spaced repetition system is leagues above competitors and the offline mode is a lifesaver during my commute."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">🇯🇵</div>
+          <div>
+            <div class="testi-author-name">Haruto Nakamura</div>
+            <div class="testi-author-meta">Learning Japanese · Tokyo, Japan</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p>"Being open source is a huge win — I can trust what the app does with my data. The French curriculum is incredibly thorough and the AI conversation partner feels like chatting with a real Parisian friend."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">🇫🇷</div>
+          <div>
+            <div class="testi-author-name">Marcus Johnson</div>
+            <div class="testi-author-meta">Learning French · Chicago, USA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DOWNLOAD ═══════════════════ -->
+<section id="download">
+  <div class="container">
+    <div class="download-inner">
+      <div class="download-blob"></div>
+      <div style="position:relative;z-index:1;">
+        <div class="tag" style="background:rgba(255,203,61,.2);color:var(--yellow);">📲 Download</div>
+        <div class="download-title">Start your fluency journey<br><span>completely free</span></div>
+        <p class="download-desc">Download the APK directly from our GitHub repository. No Play Store account required. Open-source, transparent, and always free to learn.</p>
+        <div class="download-btns">
+          <a href="https://github.com/linguabot-app/releases/latest/download/LinguaBot.apk" class="dl-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16l-4-4h3V4h2v8h3l-4 4z"/><path d="M20 18H4"/></svg>
+            Download APK (Android)
+          </a>
+          <a href="https://github.com/linguabot-app" class="dl-btn dl-btn-ghost" target="_blank">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+            View Source Code
+          </a>
+        </div>
+        <div style="margin-top:20px;font-size:.8rem;color:rgba(255,255,255,.4);">
+          ✅ Android 8.0+ &nbsp;·&nbsp; ✅ No account required &nbsp;·&nbsp; ✅ Offline-first
+        </div>
+      </div>
+      <div class="download-qr">
+        <div class="qr-grid" id="qrGrid"></div>
+        <div class="qr-label">Scan to download</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CONTACT ═══════════════════ -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="contact-info">
+        <span class="tag">📬 Contact</span>
+        <h2 class="section-title">Let's talk</h2>
+        <p class="section-sub">Have a question, partnership idea, or just want to say hi? We'd love to hear from you.</p>
+        <div class="contact-methods">
+          <div class="contact-method">
+            <div class="cm-icon">📧</div>
+            <div>
+              <div class="cm-label">Email Us</div>
+              <div class="cm-value">hello@linguabot.app</div>
+            </div>
+          </div>
+          <div class="contact-method">
+            <div class="cm-icon">🐙</div>
+            <div>
+              <div class="cm-label">GitHub</div>
+              <div class="cm-value">github.com/linguabot-app</div>
+            </div>
+          </div>
+          <div class="contact-method">
+            <div class="cm-icon">💬</div>
+            <div>
+              <div class="cm-label">Discord Community</div>
+              <div class="cm-value">discord.gg/linguabot</div>
+            </div>
+          </div>
+          <div class="contact-method">
+            <div class="cm-icon">🐦</div>
+            <div>
+              <div class="cm-label">Twitter / X</div>
+              <div class="cm-value">@LinguaBotApp</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <h3 style="font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--text);margin-bottom:22px;">Send us a message</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Sofia" id="fname">
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Smith" id="lname">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="you@example.com" id="femail">
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <select id="fsubject">
+            <option value="">Select a topic...</option>
+            <option>General Enquiry</option>
+            <option>Partnership / Collaboration</option>
+            <option>Bug Report</option>
+            <option>Feature Request</option>
+            <option>Press & Media</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Tell us what's on your mind…" id="fmessage"></textarea>
+        </div>
+        <button class="btn btn-primary form-submit" onclick="submitForm()">Send Message →</button>
+        <div id="form-success">🎉 Thanks! We'll get back to you within 24 hours.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="logo-icon">🌍</div>
+          Lingua<span>Bot</span>
+        </div>
+        <p>Free, open-source language learning powered by AI. Making fluency achievable for everyone, everywhere.</p>
+        <div class="footer-social">
+          <a class="social-btn" href="https://github.com/linguabot-app" target="_blank" title="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+          </a>
+          <a class="social-btn" href="#" title="Twitter">🐦</a>
+          <a class="social-btn" href="#" title="Discord">💬</a>
+          <a class="social-btn" href="#" title="Reddit">🤖</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how">How It Works</a></li>
+          <li><a href="#languages">Languages</a></li>
+          <li><a href="#download">Download</a></li>
+          <li><a href="https://github.com/linguabot-app/releases" target="_blank">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#team">Our Team</a></li>
+          <li><a href="https://github.com/linguabot-app" target="_blank">Open Source</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#">Press Kit</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">Open Source Licenses</a></li>
+          <li><a href="#">Security</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 LinguaBot Technologies. All rights reserved.</span>
+      <span>Made with 💛 for language learners everywhere</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════ BACK TO TOP ═══════════════════ -->
+<button id="back-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
+    <path d="M18 15l-6-6-6 6"/>
+  </svg>
+</button>
+
+<!-- ═══════════════════ JAVASCRIPT ═══════════════════ -->
+<script>
+  /* ── Theme Toggle ── */
+  const html = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const savedTheme = localStorage.getItem('lb-theme') || 'light';
+  html.setAttribute('data-theme', savedTheme);
+  toggle.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('lb-theme', next);
+  });
+
+  /* ── Mobile Menu ── */
+  const ham = document.getElementById('hamburger');
+  const mob = document.getElementById('mobileNav');
+  ham.addEventListener('click', () => mob.classList.toggle('open'));
+  function closeMob() { mob.classList.remove('open'); }
+
+  /* ── Back to Top ── */
+  const btn = document.getElementById('back-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  }, {passive: true});
+
+  /* ── Languages Marquee ── */
+  const langs = [
+    {f:'🇪🇸',n:'Spanish'},{f:'🇫🇷',n:'French'},{f:'🇩🇪',n:'German'},
+    {f:'🇯🇵',n:'Japanese'},{f:'🇨🇳',n:'Mandarin'},{f:'🇮🇹',n:'Italian'},
+    {f:'🇧🇷',n:'Portuguese'},{f:'🇰🇷',n:'Korean'},{f:'🇷🇺',n:'Russian'},
+    {f:'🇸🇦',n:'Arabic'},{f:'🇳🇱',n:'Dutch'},{f:'🇹🇷',n:'Turkish'},
+    {f:'🇵🇱',n:'Polish'},{f:'🇸🇪',n:'Swedish'},{f:'🇬🇷',n:'Greek'},
+    {f:'🇮🇳',n:'Hindi'},{f:'🇻🇳',n:'Vietnamese'},{f:'🇹🇭',n:'Thai'},
+    {f:'🇺🇦',n:'Ukrainian'},{f:'🇮🇱',n:'Hebrew'},
+  ];
+  function makeChips(items) {
+    return items.map(l => `<div class="lang-chip"><span class="flag">${l.f}</span>${l.n}</div>`).join('');
+  }
+  const r1 = document.getElementById('langRow1');
+  const r2 = document.getElementById('langRow2');
+  const html1 = makeChips(langs);
+  r1.innerHTML = html1 + html1; // duplicate for seamless scroll
+  const r2langs = [...langs].reverse();
+  const html2 = makeChips(r2langs);
+  r2.innerHTML = html2 + html2;
+
+  /* ── Fake QR Code ── */
+  const qr = document.getElementById('qrGrid');
+  const pattern = [
+    1,1,1,1,1,1,1,0,1,
+    1,0,0,0,0,0,1,0,0,
+    1,0,1,1,1,0,1,0,1,
+    1,0,1,1,1,0,1,0,0,
+    1,0,1,1,1,0,1,0,1,
+    1,0,0,0,0,0,1,0,1,
+    1,1,1,1,1,1,1,0,1,
+    0,0,0,0,0,0,0,0,0,
+    1,0,1,1,0,1,0,0,1,
+  ];
+  // Fill rest randomly
+  for(let i = pattern.length; i < 81; i++) pattern.push(Math.random() > .4 ? 1 : 0);
+  // Enforce bottom-right finder
+  [72,73,74,63,64,65,54,55,56].forEach(i => pattern[i] = 1);
+  [75,66,57].forEach(i => pattern[i] = 0);
+  qr.innerHTML = pattern.map(v => `<div class="qr-cell ${v?'on':'off'}"></div>`).join('');
+
+  /* ── Contact Form ── */
+  function submitForm() {
+    const fn = document.getElementById('fname').value.trim();
+    const em = document.getElementById('femail').value.trim();
+    const msg = document.getElementById('fmessage').value.trim();
+    if (!fn || !em || !msg) { alert('Please fill in Name, Email, and Message.'); return; }
+    document.getElementById('form-success').style.display = 'block';
+    document.getElementById('fname').value = '';
+    document.getElementById('lname').value = '';
+    document.getElementById('femail').value = '';
+    document.getElementById('fsubject').value = '';
+    document.getElementById('fmessage').value = '';
+    setTimeout(() => { document.getElementById('form-success').style.display = 'none'; }, 5000);
+  }
+
+  /* ── Scroll animations (Intersection Observer) ── */
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.feat-card, .step, .team-card, .testi-card, .about-mini-card').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(28px)';
+    el.style.transition = `opacity .5s ${i * 0.06}s ease, transform .5s ${i * 0.06}s ease`;
+    obs.observe(el);
+  });
+</script>
+</body>
+</html>
